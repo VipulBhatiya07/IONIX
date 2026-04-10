@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Products — IONIX</title>
+
+  <!-- Bootstrap 5 CSS only -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #site-nav .navbar-nav { display:flex; gap:0.75rem; align-items:center; }
+    #site-nav .nav-item .btn.btn-primary { margin-right: 0.4rem; }
+    #userMenuContainer { margin-left: 0.4rem; }
+    .btn { border-radius:10px; transition: transform .12s, box-shadow .12s; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+    .btn:hover, .btn:focus { transform:translateY(-3px); box-shadow:0 10px 24px rgba(13,110,253,0.12); }
+    .btn-primary { background-image: linear-gradient(90deg, var(--bs-primary,#0d6efd), #4b8af7); border: none; }
+    .btn-outline-primary { border-width:1px; }
+
+    /* Cart drawer styles (minimal) */
+    .cart-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1040; transition:opacity .2s; }
+    .cart-drawer { position:fixed; right:0; top:0; height:100%; width:360px; max-width:100%; background:#fff; z-index:1050; box-shadow: -8px 0 24px rgba(0,0,0,.12); transform:translateX(110%); transition:transform .25s ease; display:flex; flex-direction:column; }
+    .cart-drawer.open { transform:translateX(0); }
+    .cart-overlay.hidden { opacity:0; pointer-events:none; }
+    .cart-item { display:flex; gap:0.75rem; align-items:center; margin-bottom:0.75rem; }
+    .cart-item img { width:56px; height:56px; object-fit:cover; border-radius:6px; }
+    .cart-item .qty { width:3.2rem; }
+    .cart-empty { text-align:center; color:#666; padding:2rem 1rem; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Navbar (CSS-only collapse) -->
+  <div id="nav-placeholder"></div>
+  <script>
+  (async function insertNavWithTransitions(){
+    try{
+      const res = await fetch('/index.html');
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html,'text/html');
+      const nav = doc.getElementById('site-nav');
+      if(!nav) return;
+      const clone = nav.cloneNode(true);
+      const placeholder = document.getElementById('nav-placeholder');
+      placeholder.replaceWith(clone);
+
+      if(window.renderUser) setTimeout(()=>{ try{ window.renderUser(); }catch(e){} }, 60);
+      else { const c = clone.querySelector('#userMenuContainer'); if(c) c.innerHTML = '<a class="nav-link" href="login.html">Login</a>'; }
+
+      document.body.style.transition = document.body.style.transition || 'opacity .35s ease';
+      document.body.style.opacity = 0;
+      requestAnimationFrame(()=> document.body.style.opacity = 1);
+
+      function setActiveNav(root){
+        const links = Array.from(root.querySelectorAll('a'));
+        function norm(p){ return (p||'').replace(/\/+$/,'')||'/'; }
+        const cur = norm(location.pathname);
+        links.forEach(a=>{
+          a.classList.remove('active');
+          try{
+            const href = a.getAttribute('href')||'';
+            if(href.startsWith('#')) return;
+            const u = new URL(href, location.href);
+            const p = norm(u.pathname);
+            if(p===cur || (cur==='/' && p==='/index.html')) a.classList.add('active');
+          }catch(e){}
+        });
+      }
+      setActiveNav(clone);
+
+      function isExternal(href){ try{ const u=new URL(href, location.href); return u.origin !== location.origin; }catch(e){ return false; } }
+      clone.querySelectorAll('a').forEach(a=>{
+        const href = a.getAttribute('href')||'';
+        if(a.target === '_blank' || href.startsWith('mailto:') || href.startsWith('tel:') || isExternal(href)) return;
+        a.addEventListener('click', (ev)=>{
+          if(href.startsWith('#')){ ev.preventDefault(); const id=href.slice(1); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+          ev.preventDefault();
+          document.body.style.opacity = 0;
+          setTimeout(()=> window.location.href = href, 320);
+        });
+      });
+    }catch(e){ console.error('Failed to load site nav', e); }
+  })();
+  </script>
+
+  <!-- Page header -->
+  <header id="home" class="hero py-5">
+    <div class="container py-4">
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="link-light text-decoration-none" href="index.html#home">Home</a></li>
+          <li class="breadcrumb-item active text-white-50" aria-current="page">Products</li>
+        </ol>
+      </nav>
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge bg-primary-subtle text-primary mb-3">All products</span>
+          <h1 class="display-5 fw-bold mb-3">Shop all tech at IONIX</h1>
+          <p class="lead mb-4">Phones, laptops, accessories, and wearables—curated and covered by warranty.</p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a href="#products" class="btn btn-light btn-lg text-dark">Explore catalog</a>
+            <a href="#products" class="btn btn-outline-light btn-lg">Deals & bestsellers</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <img
+            src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=60"
+            class="img-fluid rounded-4 shadow-lg"
+            alt="Tech products collage"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Catalog -->
+    <section id="products" class="py-5 bg-light">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+          <div>
+            <h2 class="section-title mb-0">All Products</h2>
+            <p class="section-subtitle mb-0">Browse phones, laptops, and accessories.</p>
+          </div>
+          <a href="index.html#contact" class="btn btn-outline-primary">Need help choosing?</a>
+        </div>
+
+        <div class="row g-4">
+          <!-- Filters sidebar -->
+          <aside class="col-12 col-lg-3">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-semibold mb-0">Filters</h6>
+                  <button id="clearFilters" class="small btn btn-link p-0">Clear all</button>
+                </div>
+
+                <!-- Category -->
+                <details open class="mb-3 filter">
+                  <summary class="fw-semibold">Category</summary>
+                  <div class="pt-2 d-grid gap-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="catPhones" checked>
+                      <label class="form-check-label" for="catPhones">Smartphones</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="catLaptops" checked>
+                      <label class="form-check-label" for="catLaptops">Laptops</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="catAccessories" checked>
+                      <label class="form-check-label" for="catAccessories">Accessories</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="catWearables" checked>
+                      <label class="form-check-label" for="catWearables">Wearables</label>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Price -->
+                <details open class="mb-3 filter">
+                  <summary class="fw-semibold">Price</summary>
+                  <div class="row g-2 align-items-center pt-2">
+                    <div class="col-6">
+                      <label for="minPrice" class="form-label small mb-1">Min (₹)</label>
+                      <input type="number" id="minPrice" class="form-control" placeholder="0" min="0" step="1000">
+                    </div>
+                    <div class="col-6">
+                      <label for="maxPrice" class="form-label small mb-1">Max (₹)</label>
+                      <input type="number" id="maxPrice" class="form-control" placeholder="200000" min="0" step="1000">
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Brands -->
+                <details open class="mb-3 filter">
+                  <summary class="fw-semibold">Brand</summary>
+                  <div class="d-grid gap-2 pt-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandApple">
+                      <label class="form-check-label" for="brandApple">Apple</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandSamsung">
+                      <label class="form-check-label" for="brandSamsung">Samsung</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandOnePlus">
+                      <label class="form-check-label" for="brandOnePlus">OnePlus</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandLenovo">
+                      <label class="form-check-label" for="brandLenovo">Lenovo</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandAsus">
+                      <label class="form-check-label" for="brandAsus">ASUS</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandDell">
+                      <label class="form-check-label" for="brandDell">Dell</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandSony">
+                      <label class="form-check-label" for="brandSony">Sony</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="brandBose">
+                      <label class="form-check-label" for="brandBose">Bose</label>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Ratings -->
+                <details open class="mb-3 filter">
+                  <summary class="fw-semibold">Ratings</summary>
+                  <div class="d-grid gap-2 pt-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="rate4" checked>
+                      <label class="form-check-label" for="rate4">4★ & up</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="rate5">
+                      <label class="form-check-label" for="rate5">5★ only</label>
+                    </div>
+                  </div>
+                </details>
+
+                <!-- Availability -->
+                <details open class="mb-4 filter">
+                  <summary class="fw-semibold">Availability</summary>
+                  <div class="d-grid gap-2 pt-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="inStock" checked>
+                      <label class="form-check-label" for="inStock">In stock</label>
+                    </div>
+                  </div>
+                </details>
+
+                <div class="d-grid">
+                  <button id="applyFilters" class="btn btn-primary" type="button">Apply filters</button>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Products grid -->
+          <div class="col-12 col-lg-9">
+            <!-- Top bar -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+              <form id="searchForm" class="d-flex flex-grow-1 gap-2" role="search" onsubmit="return false;">
+                <input id="searchInput" class="form-control" type="search" placeholder="Search products…" aria-label="Search">
+                <button class="btn btn-outline-primary" type="button" id="searchBtn">Search</button>
+              </form>
+              <div class="d-flex align-items-center gap-2">
+                <label for="sortSelect" class="text-muted small mb-0">Sort by</label>
+                <select id="sortSelect" class="form-select">
+                  <option value="featured" selected>Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Rating</option>
+                  <option value="new">Newest</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Grid -->
+            <div id="grid" class="row g-4">
+              <!-- Repeatable product cards -->
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="flagship-smartphone-x" data-category="Smartphones" data-brand="Generic" data-stock="true">
+                  <div class="position-relative">
+                    <span class="badge badge-sale position-absolute top-0 start-0 m-2">Sale</span>
+                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="Flagship Smartphone X" loading="lazy">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Flagship Smartphone X</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(124)</span></div>
+                    <div class="mb-3"><span class="price">₹79,999</span> <span class="old-price">₹89,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=flagship-smartphone-x" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=flagship-smartphone-x" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="ultrabook-pro-14" data-category="Laptops" data-brand="Generic" data-stock="true">
+                  <img src="image/body/ultrabook.jpg" class="card-img-top" alt="Ultrabook Pro 14”" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Ultrabook Pro 14”</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(98)</span></div>
+                    <div class="mb-3"><span class="price">₹1,19,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=ultrabook-pro-14" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=ultrabook-pro-14" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="noise-cancel-headphones" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/headphones.jpg" class="card-img-top" alt="Noise‑Cancel Headphones" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Noise‑Cancel Headphones</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(307)</span></div>
+                    <div class="mb-3"><span class="price">₹19,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=noise-cancel-headphones" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=noise-cancel-headphones" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="smartwatch-series-7" data-category="Wearables" data-brand="Generic" data-stock="true">
+                  <img src="image/body/watch_7series.webp" class="card-img-top" alt="Smartwatch Series 7" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Smartwatch Series 7</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(152)</span></div>
+                    <div class="mb-3"><span class="price">₹24,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=smartwatch-series-7" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=smartwatch-series-7" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="gaming-laptop-rtx" data-category="Laptops" data-brand="Generic" data-stock="true">
+                  <img src="image/body/laptopRTX.jpg" class="card-img-top" alt="Gaming Laptop RTX" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Gaming Laptop RTX</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(87)</span></div>
+                    <div class="mb-3"><span class="price">₹1,69,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=gaming-laptop-rtx" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=gaming-laptop-rtx" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="wireless-earbuds" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/wireless_earbuds.jpg" class="card-img-top" alt="Wireless Earbuds" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Wireless Earbuds</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(410)</span></div>
+                    <div class="mb-3"><span class="price">₹12,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=wireless-earbuds" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=wireless-earbuds" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="business-laptop-15" data-category="Laptops" data-brand="Generic" data-stock="true">
+                  <img src="image/body/business_laptop.jpg" class="card-img-top" alt="Business Laptop 15”" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Business Laptop 15”</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(62)</span></div>
+                    <div class="mb-3"><span class="price">₹99,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=business-laptop-15" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=business-laptop-15" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="portable-fast-charger" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/portable_charger.jpg" class="card-img-top" alt="Portable Fast Charger" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Portable Fast Charger</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(211)</span></div>
+                    <div class="mb-3"><span class="price">₹3,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=portable-fast-charger" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=portable-fast-charger" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="android-phone-lite" data-category="Smartphones" data-brand="Generic" data-stock="true">
+                  <img src="image/body/smartphone.webp" class="card-img-top" alt="Android Phone Lite" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Android Phone Lite</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(73)</span></div>
+                    <div class="mb-3"><span class="price">₹39,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=android-phone-lite" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=android-phone-lite" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="creator-laptop-16" data-category="Laptops" data-brand="Generic" data-stock="true">
+                  <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="Creator Laptop 16”" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Creator Laptop 16”</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(41)</span></div>
+                    <div class="mb-3"><span class="price">₹1,49,999</span> <span class="old-price">₹1,69,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=creator-laptop-16" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=creator-laptop-16" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="bluetooth-speaker-mini" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="Bluetooth Speaker Mini" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Bluetooth Speaker Mini</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(189)</span></div>
+                    <div class="mb-3"><span class="price">₹7,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=bluetooth-speaker-mini" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=bluetooth-speaker-mini" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="usb-c-hub-8-in-1" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/USB‑C Hub 8‑in‑1.jpg" class="card-img-top" alt="USB‑C Hub 8‑in‑1" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">USB‑C Hub 8‑in‑1</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(122)</span></div>
+                    <div class="mb-3"><span class="price">₹4,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=usb-c-hub-8-in-1" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=usb-c-hub-8-in-1" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="4k-action-camera" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/4K Action Camera.jpg" class="card-img-top" alt="4K Action Camera" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">4K Action Camera</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(58)</span></div>
+                    <div class="mb-3"><span class="price">₹29,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=4k-action-camera" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=4k-action-camera" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="smart-home-plug" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/Smart Home Plug.webp" class="card-img-top" alt="Smart Home Plug" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Smart Home Plug</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(90)</span></div>
+                    <div class="mb-3"><span class="price">₹1,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=smart-home-plug" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=smart-home-plug" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="tablet-pro-11" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="Tablet Pro 11”" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Tablet Pro 11”</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(134)</span></div>
+                    <div class="mb-3"><span class="price">₹69,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=tablet-pro-11" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=tablet-pro-11" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="e-reader-light" data-category="Accessories" data-brand="Generic" data-stock="true">
+                  <img src="image/body/E‑reader Light.jpg" class="card-img-top" alt="E‑reader Light" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">E‑reader Light</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(55)</span></div>
+                    <div class="mb-3"><span class="price">₹12,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=e-reader-light" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=e-reader-light" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="iphone-14-pro" data-category="Smartphones" data-brand="Apple" data-stock="true">
+                  <img src="image/body/iPhone 14 Pro.jpg" class="card-img-top" alt="iPhone 14 Pro" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">iPhone 14 Pro</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(2,341)</span></div>
+                    <div class="mb-3"><span class="price">₹1,19,900</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=iphone-14-pro" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=iphone-14-pro" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="samsung-galaxy-s23" data-category="Smartphones" data-brand="Samsung" data-stock="true">
+                  <img src="image/body/Samsung Galaxy S23.jpg" class="card-img-top" alt="Samsung Galaxy S23" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Samsung Galaxy S23</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(1,768)</span></div>
+                    <div class="mb-3"><span class="price">₹79,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=samsung-galaxy-s23" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=samsung-galaxy-s23" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="oneplus-11" data-category="Smartphones" data-brand="OnePlus" data-stock="true">
+                  <img src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="OnePlus 11" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">OnePlus 11</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(984)</span></div>
+                    <div class="mb-3"><span class="price">₹49,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=oneplus-11" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=oneplus-11" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="lenovo-yoga-slim" data-category="Laptops" data-brand="Lenovo" data-stock="true">
+                  <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=60" class="card-img-top" alt="Lenovo Yoga Slim" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Lenovo Yoga Slim</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(214)</span></div>
+                    <div class="mb-3"><span class="price">₹89,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=lenovo-yoga-slim" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=lenovo-yoga-slim" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="asus-rog-strix" data-category="Laptops" data-brand="ASUS" data-stock="true">
+                  <img src="image/body/ASUS ROG Strix.jpg" class="card-img-top" alt="ASUS ROG Strix" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">ASUS ROG Strix</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(642)</span></div>
+                    <div class="mb-3"><span class="price">₹1,49,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=asus-rog-strix" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=asus-rog-strix" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="dell-xps-13" data-category="Laptops" data-brand="Dell" data-stock="true">
+                  <img src="image/body/Dell XPS 13.avif" class="card-img-top" alt="Dell XPS 13" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Dell XPS 13</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(1,002)</span></div>
+                    <div class="mb-3"><span class="price">₹1,29,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <button class="btn btn-secondary" disabled>Out of stock</button>
+                      <a href="PRODUCT-DETAIL.HTML?id=dell-xps-13" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="sony-wh-1000xm5" data-category="Accessories" data-brand="Sony" data-stock="true">
+                  <img src="image/body/Sony WH-1000XM5.webp" class="card-img-top" alt="Sony WH-1000XM5" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Sony WH-1000XM5</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(3,109)</span></div>
+                    <div class="mb-3"><span class="price">₹29,990</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=sony-wh-1000xm5" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=sony-wh-1000xm5" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="bose-quietcomfort-earbuds" data-category="Accessories" data-brand="Bose" data-stock="true">
+                  <img src="image/body/Bose QuietComfort Earbuds.jpg" class="card-img-top" alt="Bose QuietComfort Earbuds" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Bose QuietComfort Earbuds</h6>
+                    <div class="rating mb-2">★★★★★ <span class="text-muted">(1,456)</span></div>
+                    <div class="mb-3"><span class="price">₹24,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=bose-quietcomfort-earbuds" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=bose-quietcomfort-earbuds" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="apple-watch-series-8" data-category="Wearables" data-brand="Apple" data-stock="true">
+                  <img src="image/body/Apple Watch Series 8.jpeg" class="card-img-top" alt="Apple Watch Series 8" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Apple Watch Series 8</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(2,007)</span></div>
+                    <div class="mb-3"><span class="price">₹39,900</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <a href="PRODUCT-DETAIL.HTML?id=apple-watch-series-8" class="btn btn-primary">Add to Cart</a>
+                      <a href="PRODUCT-DETAIL.HTML?id=apple-watch-series-8" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-3">
+                <div class="card product-card h-100" data-id="samsung-galaxy-watch" data-category="Wearables" data-brand="Samsung" data-stock="true">
+                  <img src="image/body/Samsung Galaxy Watch.jpg" class="card-img-top" alt="Samsung Galaxy Watch" loading="lazy">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="fw-semibold">Samsung Galaxy Watch</h6>
+                    <div class="rating mb-2">★★★★☆ <span class="text-muted">(489)</span></div>
+                    <div class="mb-3"><span class="price">₹27,999</span></div>
+                    <div class="mt-auto d-grid gap-2">
+                      <button class="btn btn-secondary" disabled>Out of stock</button>
+                      <a href="PRODUCT-DETAIL.HTML?id=samsung-galaxy-watch" class="btn btn-outline-secondary">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Product pagination" class="mt-4">
+              <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                  <span class="page-link" aria-label="Previous">«</span>
+                </li>
+                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Next">»</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer pt-5">
+    <div class="container pb-4">
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4">
+          <h5 class="text-white">IONIX</h5>
+          <p class="mb-3">Phones, laptops, and accessories you’ll love—backed by fast delivery and real support.</p>
+          <div class="d-flex gap-3">
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="YouTube">▶️</a>
+            <a href="#" aria-label="Facebook">📘</a>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6 class="text-white">Shop</h6>
+          <ul class="list-unstyled">
+            <li><a href="#products">Smartphones</a></li>
+            <li><a href="#products">Laptops</a></li>
+            <li><a href="#products">Accessories</a></li>
+            <li><a href="#products">Wearables</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6 class="text-white">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Careers</a></li>
+            <li><a href="index.html#contact">Press</a></li>
+            <li><a href="index.html#contact">Partners</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-4">
+          <h6 class="text-white">Support</h6>
+          <ul class="list-unstyled mb-3">
+            <li><a href="index.html#contact">Help center</a></li>
+            <li><a href="index.html#contact">Shipping & returns</a></li>
+            <li><a href="index.html#contact">Warranty</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+          <small class="text-secondary">© 2025 IONIX. All rights reserved.</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top (CSS only) -->
+  <a href="#home" class="back-to-top" aria-label="Back to top">↑</a>
+
+  <!-- Accessibility / toast placeholder -->
+  <div id="cartToast" aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index:1050; pointer-events:none;"></div>
+
+  <!-- Cart overlay + drawer -->
+  <div id="cartOverlay" class="cart-overlay hidden" hidden></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-header d-flex justify-content-between align-items-center p-3 border-bottom">
+      <h5 class="mb-0">Your Cart</h5>
+      <button id="closeCart" class="btn-close" aria-label="Close cart"></button>
+    </div>
+    <div id="cartItems" class="cart-items p-3" style="overflow:auto; flex:1;"></div>
+    <div class="cart-footer p-3 border-top">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <strong>Total</strong>
+        <strong id="cartTotal">₹0</strong>
+      </div>
+      <div class="d-grid gap-2">
+        <button id="checkoutBtn" class="btn btn-primary">Checkout</button>
+        <button id="clearCartBtn" class="btn btn-outline-secondary">Clear cart</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Script: filtering, sorting, search, add-to-cart -->
+  <script>
+/* Replaced filtering/sorting script -> now includes pagination */
+(function () {
+  const grid = document.getElementById('grid');
+  const productSelector = '.product-card';
+  const products = Array.from(grid.querySelectorAll(productSelector));
+  const PAGE_SIZE = 12;
+
+  // cart state (unchanged logic)
+  const CART_KEY = 'ionix_cart_v1';
+  let cart = [];
+  function loadCart() { try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e){ cart = []; } }
+  function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartCount(); renderCart(); }
+
+  // also call global updater (if nav script provided it)
+  function updateGlobalCartCount() { try{ if(window.updateCartCount) window.updateCartCount(); }catch(e){} }
+
+  function formatPrice(n){ return '₹' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function updateCartCount(){ const c = cart.reduce((s,i)=>s+i.qty,0); const el = document.getElementById('cartCount'); if(el) el.textContent = c; }
+
+  function addToCart(item) {
+    const exists = cart.find(i => i.title === item.title && i.price === item.price);
+    if (exists) exists.qty += 1; else cart.push({ ...item, qty: 1 });
+    saveCart();
+    updateGlobalCartCount(); // update nav counter
+    showToast(`${item.title} added to cart`);
+  }
+
+  // cart rendering (kept same)
+  function removeFromCart(idx) { cart.splice(idx,1); saveCart(); }
+  function setQty(idx, qty){ if (qty < 1) return; cart[idx].qty = qty; saveCart(); }
+  function renderCart(){
+    const wrap = document.getElementById('cartItems');
+    wrap.innerHTML = '';
+    if (!cart.length) { wrap.innerHTML = '<div class="cart-empty">Your cart is empty.</div>'; document.getElementById('cartTotal').textContent = formatPrice(0); return; }
+    let total = 0;
+    cart.forEach((it, idx) => {
+      total += it.price * it.qty;
+      const row = document.createElement('div');
+      row.className = 'cart-item';
+      row.innerHTML = `
+        <img src="${escapeHtml(it.img||'')}" alt="${escapeHtml(it.title)}">
+        <div style="flex:1">
+          <div class="small fw-semibold">${escapeHtml(it.title)}</div>
+          <div class="small text-muted">${formatPrice(it.price)} <span class="text-secondary">× ${it.qty}</span></div>
+          <div class="d-flex gap-2 mt-2 align-items-center">
+            <input type="number" class="form-control form-control-sm qty" value="${it.qty}" min="1" aria-label="Quantity">
+            <button class="btn btn-sm btn-outline-danger remove">Remove</button>
+          </div>
+        </div>
+      `;
+      row.querySelector('.remove').addEventListener('click', ()=>{ removeFromCart(idx); });
+      row.querySelector('.qty').addEventListener('change', (e)=>{ const v = parseInt(e.target.value||1,10); setQty(idx, isNaN(v)?1:v); });
+      wrap.appendChild(row);
+    });
+    document.getElementById('cartTotal').textContent = formatPrice(total);
+  }
+
+  // cart open/close wiring (unchanged)
+  const cartToggle = document.getElementById('cartToggle');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const closeCart = document.getElementById('closeCart');
+  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.hidden = false; cartOverlay.classList.remove('hidden'); cartDrawer.setAttribute('aria-hidden','false'); }
+  function closeCartFn(){ cartDrawer.classList.remove('open'); cartOverlay.classList.add('hidden'); setTimeout(()=>cartOverlay.hidden = true,220); cartDrawer.setAttribute('aria-hidden','true'); }
+  cartToggle?.addEventListener('click', ()=>{ loadCart(); renderCart(); openCart(); });
+  closeCart?.addEventListener('click', closeCartFn);
+  cartOverlay?.addEventListener('click', closeCartFn);
+  document.getElementById('clearCartBtn')?.addEventListener('click', ()=>{ cart = []; saveCart(); });
+  document.getElementById('checkoutBtn')?.addEventListener('click', ()=>{ alert('Proceed to checkout (demo)'); });
+
+  loadCart();
+  updateCartCount();
+
+  // --- indexing product metadata ---
+  function parsePrice(card) {
+    const el = card.querySelector('.price');
+    if (!el) return 0;
+    const num = el.textContent.replace(/[,₹\s]/g,'').match(/\d+/);
+    return num ? parseInt(num[0], 10) : 0;
+  }
+  function parseImage(card) { const img = card.querySelector('.card-img-top'); return img ? img.src : ''; }
+  function parseRating(card) { const el = card.querySelector('.rating'); if (!el) return 0; const m = (el.textContent||'').match(/★/g); return m ? m.length : 0; }
+  function parseTitle(card) { const h = card.querySelector('h6'); return h ? h.textContent.trim() : ''; }
+  function detectCategory(title) { const t = title.toLowerCase(); if (t.includes('phone')||t.includes('smartphone')||t.includes('android')) return 'Smartphones'; if (t.includes('laptop')||t.includes('ultrabook')||t.includes('notebook')||t.includes('creator')) return 'Laptops'; if (t.includes('watch')||t.includes('smartwatch')||t.includes('series')) return 'Wearables'; if (t.includes('earbud')||t.includes('headphone')||t.includes('charger')||t.includes('hub')||t.includes('speaker')||t.includes('plug')||t.includes('camera')||t.includes('tablet')||t.includes('e‑reader')||t.includes('earbuds')) return 'Accessories'; return 'Other'; }
+  function detectBrand(title, imgAlt) { const t = (title + ' ' + (imgAlt || '')).toLowerCase(); const brands = ['apple','samsung','oneplus','lenovo','asus','dell','sony','bose']; for (const b of brands) if (t.includes(b)) return capitalize(b); return ''; }
+  function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+  const index = products.map(card => {
+    const title = parseTitle(card);
+    const img = card.querySelector('.card-img-top');
+    const imgAlt = img ? img.alt || '' : '';
+    const price = parsePrice(card);
+    const rating = parseRating(card);
+    const category = card.dataset.category || detectCategory(title);
+    const brand = card.dataset.brand || detectBrand(title, imgAlt);
+    const inStock = ('dataset' in card && 'stock' in card.dataset) ? (card.dataset.stock === 'true') : true;
+    return { card, title, price, rating, category, brand, inStock };
+  });
+
+  // --- filtering / sorting / pagination helpers ---
+  function getFilterState() {
+    const checkedCategories = Array.from(document.querySelectorAll('[id^="cat"]')).filter(c=>c.checked).map(c=>c.nextElementSibling?.textContent?.trim()).filter(Boolean);
+    const brandChecks = Array.from(document.querySelectorAll('[id^="brand"]')).filter(b=>b.checked).map(b=>b.nextElementSibling?.textContent?.trim()).filter(Boolean);
+    const minP = parseInt(document.getElementById('minPrice')?.value || '') || 0;
+    const maxP = parseInt(document.getElementById('maxPrice')?.value || '') || 1e12;
+    const rate4 = document.getElementById('rate4')?.checked;
+    const rate5 = document.getElementById('rate5')?.checked;
+    const inStockOnly = document.getElementById('inStock')?.checked;
+    const q = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+    return { checkedCategories, brandChecks, minP, maxP, rate4, rate5, inStockOnly, q };
+  }
+
+  function passesFilters(item, fs) {
+    const { checkedCategories, brandChecks, minP, maxP, rate4, rate5, inStockOnly, q } = fs;
+    let visible = true;
+    if (checkedCategories.length) {
+      visible = visible && checkedCategories.some(c => item.category.toLowerCase().includes((c||'').toLowerCase()));
+    }
+    if (brandChecks.length) {
+      if (!item.brand) visible = false;
+      else visible = visible && brandChecks.some(b => item.brand.toLowerCase() === b.toLowerCase());
+    }
+    visible = visible && item.price >= minP && item.price <= maxP;
+    if (rate5 && !rate4) visible = visible && item.rating === 5;
+    else if (rate4) visible = visible && item.rating >= 4;
+    if (inStockOnly) visible = visible && item.inStock;
+    if (q) {
+      visible = visible && (item.title.toLowerCase().includes(q) || (item.brand||'').toLowerCase().includes(q) || item.category.toLowerCase().includes(q));
+    }
+    return visible;
+  }
+
+  function computeVisibleItems() {
+    const fs = getFilterState();
+    return index.filter(item => passesFilters(item, fs));
+  }
+
+  function applySortToList(list) {
+    const sel = document.getElementById('sortSelect')?.value || 'featured';
+    switch(sel){
+      case 'price-low': return list.slice().sort((a,b)=>a.price-b.price);
+      case 'price-high': return list.slice().sort((a,b)=>b.price-a.price);
+      case 'rating': return list.slice().sort((a,b)=>b.rating-a.rating);
+      case 'new': return list; // keep original order
+      default: return list;
+    }
+  }
+
+  // pagination render: builds page control and wires clicks
+  const paginationContainer = document.querySelector('nav[aria-label="Product pagination"] .pagination');
+  function renderPagination(totalPages, currentPage) {
+    if (!paginationContainer) return;
+    const navEl = paginationContainer.closest('nav[aria-label="Product pagination"]');
+    // hide nav entirely when only one page
+    if (totalPages <= 1) {
+      if (navEl) navEl.style.display = 'none';
+      return;
+    } else {
+      if (navEl) navEl.style.display = '';
+    }
+    paginationContainer.innerHTML = '';
+    function makeItem(pageNum, label, active=false, disabled=false) {
+      const li = document.createElement('li');
+      li.className = 'page-item' + (active ? ' active' : '') + (disabled ? ' disabled' : '');
+      const inner = (active || disabled) ? `<span class="page-link">${label}</span>` : `<a class="page-link" href="#" data-page="${pageNum}">${label}</a>`;
+      li.innerHTML = inner;
+      return li;
+    }
+    // prev
+    paginationContainer.appendChild(makeItem(currentPage-1, '«', false, currentPage<=1));
+    // page window
+    const maxButtons = 7;
+    let start = 1, end = totalPages;
+    if (totalPages > maxButtons) {
+      const half = Math.floor(maxButtons/2);
+      start = Math.max(1, currentPage - half);
+      end = start + maxButtons - 1;
+      if (end > totalPages) { end = totalPages; start = end - maxButtons + 1; }
+    }
+    if (start > 1) {
+      paginationContainer.appendChild(makeItem(1,'1', currentPage===1));
+      if (start > 2) {
+        const ell = document.createElement('li'); ell.className='page-item disabled'; ell.innerHTML='<span class="page-link">…</span>'; paginationContainer.appendChild(ell);
+      }
+    }
+    for (let p = start; p <= end; p++) paginationContainer.appendChild(makeItem(p, String(p), p===currentPage));
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        const ell = document.createElement('li'); ell.className='page-item disabled'; ell.innerHTML='<span class="page-link">…</span>'; paginationContainer.appendChild(ell);
+      }
+      paginationContainer.appendChild(makeItem(totalPages, String(totalPages), currentPage===totalPages));
+    }
+    // next
+    paginationContainer.appendChild(makeItem(currentPage+1, '»', false, currentPage>=totalPages));
+
+    // attach click handlers
+    Array.from(paginationContainer.querySelectorAll('a[data-page]')).forEach(a=>{
+      a.addEventListener('click', (ev)=>{
+        ev.preventDefault();
+        const page = parseInt(a.dataset.page,10) || 1;
+        renderPage(page);
+        const params = new URLSearchParams(location.search);
+        params.set('page', String(page));
+        history.pushState(null,'', location.pathname + '?' + params.toString());
+        window.scrollTo({top: document.getElementById('products').offsetTop - 60, behavior:'smooth'});
+      });
+    });
+  }
+
+  // core: render specified page from filtered+sorted items
+  function renderPage(requestedPage) {
+    const visible = computeVisibleItems();
+    const sorted = applySortToList(visible);
+    const total = sorted.length;
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    let page = parseInt(requestedPage || 1, 10) || 1;
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+    // hide all cards first
+    index.forEach(i => i.card.style.display = 'none');
+    // show slice
+    const start = (page -1) * PAGE_SIZE;
+    const slice = sorted.slice(start, start + PAGE_SIZE);
+    slice.forEach(i => i.card.style.display = '');
+    // update pagination UI
+    renderPagination(totalPages, page);
+  }
+
+  // bind controls so they always call renderPage(1) on change
+  function bindControls() {
+    document.getElementById('applyFilters')?.addEventListener('click', ()=> renderPage(1));
+    document.getElementById('clearFilters')?.addEventListener('click', ()=>{
+      // reset categories and controls (keeps previous reset behavior)
+      ['catPhones','catLaptops','catAccessories','catWearables'].forEach(id=>{ const e=document.getElementById(id); if(e) e.checked=true; });
+      document.querySelectorAll('[id^="brand"]').forEach(b=>b.checked=false);
+      document.getElementById('rate4') && (document.getElementById('rate4').checked = true);
+      document.getElementById('rate5') && (document.getElementById('rate5').checked = false);
+      document.getElementById('minPrice') && (document.getElementById('minPrice').value = '');
+      document.getElementById('maxPrice') && (document.getElementById('maxPrice').value = '');
+      document.getElementById('inStock') && (document.getElementById('inStock').checked = true);
+      document.getElementById('searchInput') && (document.getElementById('searchInput').value = '');
+      renderPage(1);
+    });
+
+    // auto-apply when any control changes
+    document.querySelectorAll('#products input, #products select').forEach(el => el.addEventListener('change', ()=> renderPage(1)));
+
+    // search with debounce
+    const searchInput = document.getElementById('searchInput');
+    const debounce = (fn, ms=250) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; };
+    if (searchInput) searchInput.addEventListener('input', debounce(()=> renderPage(1), 200));
+    document.getElementById('searchBtn')?.addEventListener('click', ()=> renderPage(1));
+    document.getElementById('sortSelect')?.addEventListener('change', ()=> renderPage(1));
+
+    // add-to-cart binds (unchanged behaviour)
+    document.querySelectorAll('.product-card .btn.btn-primary').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const card = btn.closest('.product-card');
+        const title = parseTitle(card) || 'Product';
+        const price = parsePrice(card) || 0;
+        const img = parseImage(card) || '';
+        addToCart({ title, price, img });
+      });
+    });
+  }
+
+  // Toast helper (unchanged)
+  function showToast(text) {
+    const container = document.getElementById('cartToast');
+    const el = document.createElement('div');
+    el.className = 'toast align-items-center text-bg-dark border-0 show';
+    el.setAttribute('role','status');
+    el.style.pointerEvents = 'auto';
+    el.innerHTML = `<div class="d-flex"><div class="toast-body">${escapeHtml(text)}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"></button></div>`;
+    container.appendChild(el);
+    const close = el.querySelector('.btn-close');
+    const remove = ()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),250); };
+    close.addEventListener('click', remove);
+    setTimeout(remove, 3000);
+  }
+
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // apply category from query param (keeps previous behaviour then render page)
+  (function applyCategoryFromQuery() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const cat = (params.get('category') || '').trim();
+      if (!cat) return;
+      const map = { 'smartphones': 'catPhones', 'laptops': 'catLaptops', 'accessories': 'catAccessories', 'wearables': 'catWearables' };
+      const key = cat.toLowerCase();
+      if (map[key]) {
+        ['catPhones','catLaptops','catAccessories','catWearables'].forEach(id => {
+          const el = document.getElementById(id); if(!el) return; el.checked = (id === map[key]);
+        });
+      } else {
+        // try match labels
+        ['catPhones','catLaptops','catAccessories','catWearables'].forEach(id => {
+          const label = document.querySelector(`label[for="${id}"]`);
+          if (label && label.textContent.trim().toLowerCase() === cat.toLowerCase()) {
+            ['catPhones','catLaptops','catAccessories','catWearables'].forEach(i=>{ const e=document.getElementById(i); if(e) e.checked = (i===id); });
+          }
+        });
+      }
+    } catch (e) {}
+  })();
+
+  // boot
+  bindControls();
+  // initial page from query (page param)
+  const initialPage = parseInt(new URLSearchParams(location.search).get('page')) || 1;
+  renderPage(initialPage);
+
+  // ensure cart UI inited
+  renderCart();
+  // update nav cart count on initial load
+  try{ if(window.updateCartCount) window.updateCartCount(); }catch(e){}
+  })();
+</script>
+
+  <!-- No JS required -->
+  <!-- Add this script near the end of product.html (after other scripts) -->
+  <script>
+/* fixed: user widget renderer */
+(function(){
+  const USER_KEY = 'ionix_user_v1';
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function firstName(n){ return (n||'').split(' ')[0] || n || 'Account'; }
+  function renderUser(){
+    const c = document.getElementById('userMenuContainer');
+    if(!c) return;
+    const u = JSON.parse(localStorage.getItem(USER_KEY)||'null');
+    if(u){
+      c.innerHTML = `
+        <div id="userWidget" class="position-relative d-inline-block">
+          <button id="userBtn" class="btn btn-outline-primary">${escapeHtml(firstName(u.name))}</button>
+          <div id="userDropdown" style="display:none;position:absolute;right:0;top:38px;min-width:180px;z-index:2000;" class="card p-2">
+            <div class="small text-muted">Signed in as <strong>${escapeHtml(u.name)}</strong></div>
+            <hr class="my-2">
+            <a class="d-block py-1" href="product.html">My Orders</a>
+            <a class="d-block py-1" href="contact.html">Support</a>
+            <button id="logoutBtn" class="btn btn-link p-0 mt-2">Logout</button>
+          </div>
+        </div>
+      `;
+      const btn = document.getElementById('userBtn');
+      const dd = document.getElementById('userDropdown');
+      btn.addEventListener('click', ()=> dd.style.display = dd.style.display === 'none' ? 'block' : 'none');
+      document.addEventListener('click', (e)=> { if(!document.getElementById('userWidget')?.contains(e.target)) dd.style.display='none'; });
+      document.getElementById('logoutBtn')?.addEventListener('click', ()=>{ localStorage.removeItem(USER_KEY); renderUser(); });
+    } else {
+      c.innerHTML = `<a class="nav-link" href="login.html">Login</a>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', renderUser);
+  window.renderUser = renderUser;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Your Cart — IONIX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root{--brand:#0d6efd}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:linear-gradient(180deg,#f7f9ff 0%, #eef2ff 100%);min-height:100vh;display:flex;flex-direction:column}
+    #site-nav .navbar-nav{display:flex;gap:.75rem;align-items:center}
+    .page-hero{padding:2.5rem 0}
+    .cart-card{max-width:1100px;margin:1.25rem auto;padding:1rem;border-radius:12px;background:#fff;box-shadow:0 8px 30px rgba(13,110,253,0.04);border:1px solid #eef6ff}
+    .cart-item img{width:88px;height:88px;object-fit:cover;border-radius:8px}
+    .qty-input{width:84px}
+    .empty-cart{padding:3rem;text-align:center;color:#6c757d}
+    .muted{color:#6c757d}
+    .btn-primary{background-image:linear-gradient(90deg,var(--brand),#4b8af7);border:none}
+    @media (max-width:720px){ .cart-item{flex-direction:column;align-items:flex-start} .cart-item img{width:100%;height:auto} .qty-input{width:100%} }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <header class="page-hero">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h1 class="h3 mb-0">Your Cart</h1>
+          <div class="muted">Review items, update quantities, and proceed to checkout.</div>
+        </div>
+        <div>
+          <a href="product.html" class="btn btn-outline-secondary">Continue shopping</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="flex-grow-1">
+    <div class="cart-card container" role="region" aria-label="Shopping cart">
+      <div id="cartContent">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-4 small-muted">© 2025 IONIX — All rights reserved.</footer>
+
+  <script>
+  (async function insertNavWithTransitions(){
+    try{
+      const res = await fetch('/index.html');
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html,'text/html');
+      const nav = doc.getElementById('site-nav');
+      if(!nav) return;
+      const clone = nav.cloneNode(true);
+      const placeholder = document.getElementById('nav-placeholder');
+      placeholder.replaceWith(clone);
+
+      if(window.renderUser) setTimeout(()=>{ try{ window.renderUser(); }catch(e){} }, 60);
+      else { const c = clone.querySelector('#userMenuContainer'); if(c) c.innerHTML = '<a class="nav-link" href="login.html">Login</a>'; }
+
+      document.body.style.transition = document.body.style.transition || 'opacity .35s ease';
+      document.body.style.opacity = 0;
+      requestAnimationFrame(()=> document.body.style.opacity = 1);
+
+      function setActiveNav(root){
+        const links = Array.from(root.querySelectorAll('a'));
+        function norm(p){ return (p||'').replace(/\/+$/,'')||'/'; }
+        const cur = norm(location.pathname);
+        links.forEach(a=>{
+          a.classList.remove('active');
+          try{
+            const href = a.getAttribute('href')||'';
+            if(href.startsWith('#')) return;
+            const u = new URL(href, location.href);
+            const p = norm(u.pathname);
+            if(p===cur || (cur==='/' && p==='/index.html')) a.classList.add('active');
+          }catch(e){}
+        });
+      }
+      setActiveNav(clone);
+
+      function isExternal(href){ try{ const u=new URL(href, location.href); return u.origin !== location.origin; }catch(e){ return false; } }
+      clone.querySelectorAll('a').forEach(a=>{
+        const href = a.getAttribute('href')||'';
+        if(a.target === '_blank' || href.startsWith('mailto:') || href.startsWith('tel:') || isExternal(href)) return;
+        a.addEventListener('click', (ev)=>{
+          if(href.startsWith('#')){ ev.preventDefault(); const id=href.slice(1); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+          ev.preventDefault();
+          document.body.style.opacity = 0;
+          setTimeout(()=> window.location.href = href, 320);
+        });
+      });
+    }catch(e){ console.error('Failed to load site nav', e); }
+  })();
+  </script>
+
+  <script>
+  (function(){
+    const KEY = 'ionix_cart_v1';
+
+    function fmt(n){ return '₹' + Number(n||0).toLocaleString('en-IN'); }
+    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function loadCart(){ try{ return JSON.parse(localStorage.getItem(KEY) || '[]'); }catch(e){ return []; } }
+    function saveCart(cart){ localStorage.setItem(KEY, JSON.stringify(cart)); renderCart(); }
+
+    function calcTotal(cart){
+      return cart.reduce((s,i)=> s + ((Number(i.price)||0) * (Number(i.qty)||0)), 0);
+    }
+
+    function createCartItemRow(item, idx){
+      const div = document.createElement('div');
+      div.className = 'd-flex gap-3 align-items-center cart-item py-3 border-bottom';
+      div.innerHTML = `
+        <img src="${escapeHtml(item.img||'image/body/smartphone.webp')}" alt="${escapeHtml(item.title||'Product')}">
+        <div style="flex:1">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">${escapeHtml(item.title || 'Product')}</div>
+              <div class="muted small">${escapeHtml(item.subtitle||item.brand||'')}</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-semibold">${fmt(item.price)}</div>
+              <div class="muted small">each</div>
+            </div>
+          </div>
+          <div class="d-flex gap-2 align-items-center mt-2">
+            <input type="number" min="1" value="${Number(item.qty)||1}" class="form-control form-control-sm qty-input qty-input-${idx}" aria-label="Quantity for ${escapeHtml(item.title)}" style="width:84px">
+            <button class="btn btn-outline-danger btn-sm remove-btn" data-idx="${idx}" type="button">Remove</button>
+            <a class="btn btn-outline-secondary btn-sm" href="PRODUCT-DETAIL.HTML?id=${encodeURIComponent(item.id||'')}">View</a>
+          </div>
+        </div>
+      `;
+      // qty handler
+      const qtyInput = div.querySelector('.qty-input');
+      qtyInput.addEventListener('change', (e)=>{
+        const val = parseInt(e.target.value,10);
+        if(isNaN(val) || val < 1){ e.target.value = 1; return; }
+        const cart = loadCart();
+        if(cart[idx]){ cart[idx].qty = val; saveCart(cart); }
+      });
+      // remove handler
+      div.querySelector('.remove-btn').addEventListener('click', ()=>{
+        const cart = loadCart();
+        cart.splice(idx,1);
+        saveCart(cart);
+      });
+      return div;
+    }
+
+    function renderCart(){
+      const wrap = document.getElementById('cartContent');
+      const cart = loadCart();
+      wrap.innerHTML = '';
+      if(!cart.length){
+        wrap.innerHTML = `<div class="empty-cart"><h4>Your cart is empty</h4><p class="muted">Start adding items to your cart.</p><div class="mt-3"><a href="product.html" class="btn btn-primary">Browse products</a></div></div>`;
+        return;
+      }
+      // list
+      const list = document.createElement('div');
+      cart.forEach((it, idx)=> list.appendChild(createCartItemRow(it, idx)));
+      wrap.appendChild(list);
+
+      // summary
+      const total = calcTotal(cart);
+      const summary = document.createElement('aside');
+      summary.className = 'mt-3 p-3 bg-light rounded-3';
+      summary.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-2"><div class="muted">Subtotal</div><div class="fw-semibold">${fmt(total)}</div></div>
+        <div class="d-flex justify-content-between align-items-center muted mb-3"><div>Shipping</div><div>Calculated at checkout</div></div>
+        <div class="d-grid gap-2">
+          <button id="checkoutBtn" class="btn btn-primary">Proceed to Checkout</button>
+          <button id="clearCartBtn" class="btn btn-outline-secondary">Clear cart</button>
+        </div>
+      `;
+      wrap.appendChild(summary);
+
+      document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+        // demo checkout: in real app redirect to checkout flow
+        alert('Demo checkout: total ' + fmt(total) + '. Redirecting to payment (demo).');
+        // optionally clear cart
+        // localStorage.removeItem(KEY);
+        // renderCart();
+      });
+      document.getElementById('clearCartBtn').addEventListener('click', ()=>{
+        if(!confirm('Clear cart?')) return;
+        localStorage.removeItem(KEY);
+        renderCart();
+      });
+    }
+
+    // expose addToCart globally so product pages can call window.addToCartFromPage(...)
+    window.addToCartFromPage = function(item){
+      // item: { id, title, price, img, qty:1 }
+      try{
+        const cart = loadCart();
+        const idx = cart.findIndex(i=>String(i.id)===String(item.id));
+        if(idx >= 0){ cart[idx].qty = (Number(cart[idx].qty)||1) + (Number(item.qty)||1); }
+        else { cart.push({ id: item.id, title: item.title, price: Number(item.price)||0, img: item.img||'', qty: Number(item.qty)||1, subtitle: item.subtitle||item.brand||'' }); }
+        saveCart(cart);
+        alert((item.title||'Product') + ' added to cart');
+      }catch(e){ console.error(e); }
+    };
+
+    // on page load render
+    document.addEventListener('DOMContentLoaded', renderCart);
+
+    // keyboard shortcut "c" to open cart (developer convenience)
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'c'){ window.scrollTo({top:0,behavior:'smooth'}); } });
+
+  })();
+  </script>
+</body>
+</html>

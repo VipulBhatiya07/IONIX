@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You — Message Received</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <style>
+        :root { --accent: #0d6efd; --success: #198754; --muted: #6c757d; }
+        body { background: linear-gradient(135deg, rgba(13,110,253,0.08), rgba(118,75,162,0.06)); min-height: 100vh; display: flex; align-items: center; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+        .container { max-width: 500px; background: #fff; padding: 48px 32px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); text-align: center; }
+        .success-icon { width: 64px; height: 64px; background: var(--success); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 24px; }
+        h1 { color: #111; font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        p { color: var(--muted); font-size: 16px; line-height: 1.5; margin-bottom: 24px; }
+        .info-box { background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 24px 0; border-left: 4px solid var(--accent); text-align: left; }
+        .info-box strong { color: #111; display: block; margin-bottom: 4px; }
+        .info-box span { color: var(--muted); font-size: 14px; }
+        .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-outline { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+        .admin-note { background: #fff3cd; padding: 12px 16px; border-radius: 6px; margin-top: 24px; font-size: 13px; color: #664d03; border-left: 4px solid #ffc107; }
+        .admin-note strong { color: #664d03; }
+        #site-nav .navbar-nav { display:flex; gap:0.75rem; align-items:center; }
+        #site-nav .nav-item .btn.btn-primary { margin-right: 0.4rem; }
+        #userMenuContainer { margin-left: 0.4rem; }
+        .btn { border-radius:10px; transition: transform .12s, box-shadow .12s; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+        .btn:hover, .btn:focus { transform:translateY(-3px); box-shadow:0 10px 24px rgba(13,110,253,0.12); }
+        .btn-primary { background-image: linear-gradient(90deg, var(--bs-primary,#0d6efd), #4b8af7); border: none; }
+        .btn-outline-primary { border-width:1px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Thank You!</h1>
+        <p>Your message has been received successfully. Our team will review it and get back to you soon.</p>
+
+        <div class="info-box">
+            <strong>What's next?</strong>
+            <span>We typically respond to inquiries within 24 hours during business hours (Mon–Sat, 9 AM–8 PM IST).</span>
+        </div>
+
+        <div class="info-box">
+            <strong>Need immediate help?</strong>
+            <span>Call us at <a href="tel:+919812345670" style="color:var(--accent);text-decoration:none">+91 98123‑45670</a> or email <a href="mailto:support@ionix.com" style="color:var(--accent);text-decoration:none">support@ionix.com</a></span>
+        </div>
+
+        <div class="actions">
+            <a href="index.html" class="btn btn-primary">Return to Home</a>
+            <a href="product.html" class="btn btn-outline">Continue Shopping</a>
+        </div>
+
+        <div class="admin-note">
+            <strong>For IONIX Staff:</strong> View all messages in the <a href="manage.html" style="color:#664d03;text-decoration:underline">Admin Dashboard</a> (requires login via <a href="admin.html" style="color:#664d03;text-decoration:underline">admin.html</a>).
+        </div>
+    </div>
+
+    <div id="nav-placeholder"></div>
+    <script>
+    (async function insertNavWithTransitions(){
+      try{
+        const res = await fetch('/index.html');
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html,'text/html');
+        const nav = doc.getElementById('site-nav');
+        if(!nav) return;
+        const clone = nav.cloneNode(true);
+        const placeholder = document.getElementById('nav-placeholder');
+        placeholder.replaceWith(clone);
+
+        if(window.renderUser) setTimeout(()=>{ try{ window.renderUser(); }catch(e){} }, 60);
+        else { const c = clone.querySelector('#userMenuContainer'); if(c) c.innerHTML = '<a class="nav-link" href="login.html">Login</a>'; }
+
+        document.body.style.transition = document.body.style.transition || 'opacity .35s ease';
+        document.body.style.opacity = 0;
+        requestAnimationFrame(()=> document.body.style.opacity = 1);
+
+        function setActiveNav(root){
+          const links = Array.from(root.querySelectorAll('a'));
+          function norm(p){ return (p||'').replace(/\/+$/,'')||'/'; }
+          const cur = norm(location.pathname);
+          links.forEach(a=>{
+            a.classList.remove('active');
+            try{
+              const href = a.getAttribute('href')||'';
+              if(href.startsWith('#')) return;
+              const u = new URL(href, location.href);
+              const p = norm(u.pathname);
+              if(p===cur || (cur==='/' && p==='/index.html')) a.classList.add('active');
+            }catch(e){}
+          });
+        }
+        setActiveNav(clone);
+
+        function isExternal(href){ try{ const u=new URL(href, location.href); return u.origin !== location.origin; }catch(e){ return false; } }
+        clone.querySelectorAll('a').forEach(a=>{
+          const href = a.getAttribute('href')||'';
+          if(a.target === '_blank' || href.startsWith('mailto:') || href.startsWith('tel:') || isExternal(href)) return;
+          a.addEventListener('click', (ev)=>{
+            if(href.startsWith('#')){ ev.preventDefault(); const id=href.slice(1); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+            ev.preventDefault();
+            document.body.style.opacity = 0;
+            setTimeout(()=> window.location.href = href, 320);
+          });
+        });
+      }catch(e){ console.error('Failed to load site nav', e); }
+    })();
+    </script>
+</body>
+</html>

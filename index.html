@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- SEO Meta Tags -->
+  <title>IONIX - Premium Phones, Laptops & Electronics Store | Free Shipping</title>
+  <meta name="description" content="Shop the latest smartphones, laptops, and electronics at IONIX. Authorized retailer with 2-year warranty, free shipping over ₹999, and 24/7 support. Trusted by 50,000+ customers." />
+  <meta name="keywords" content="smartphones, laptops, electronics, gadgets, accessories, online shopping, tech store" />
+  <meta name="author" content="IONIX Electronics" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="IONIX - Premium Electronics Store" />
+  <meta property="og:description" content="Discover top brands, exclusive deals on phones, laptops & electronics with fast delivery." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.ionix.com/" />
+  <meta property="og:image" content="https://www.ionix.com/image/og-image.jpg" />
+  <meta property="og:site_name" content="IONIX" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="IONIX - Premium Electronics Store" />
+  <meta name="twitter:description" content="Shop the latest tech with 2-year warranty and free shipping" />
+  <meta name="twitter:image" content="https://www.ionix.com/image/twitter-image.jpg" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.ionix.com/" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  
+  <!-- Preconnect to External Domains -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Nav & button touch-ups -->
+  <style>
+    /* Ensure consistent spacing between nav items (works with Bootstrap flex nav) */
+    #site-nav .navbar-nav { display:flex; gap:0.75rem; align-items:center; }
+    /* Extra breathing before the user menu (Shop Now should sit apart from login) */
+    #site-nav .nav-item .btn.btn-primary { margin-right: 0.4rem; }
+    #userMenuContainer { margin-left: 0.4rem; }
+
+    /* Global button enhancements */
+    .btn {
+      border-radius: 10px;
+      transition: transform .12s ease, box-shadow .12s ease, opacity .12s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .btn:hover, .btn:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(13,110,253,0.12);
+      opacity: 0.98;
+    }
+    .btn-primary {
+      background-image: linear-gradient(90deg, var(--bs-primary,#0d6efd), #4b8af7);
+      border: none;
+    }
+    .btn-outline-primary {
+      border-width: 1px;
+      background: transparent;
+    }
+    /* Slightly larger tap targets for small screens */
+    @media (max-width: 576px){
+      .btn { padding: .6rem 1rem; }
+    }
+  </style>
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ElectronicsStore",
+    "name": "IONIX",
+    "description": "Premium electronics store offering phones, laptops, and accessories",
+    "url": "https://www.ionix.com",
+    "telephone": "+919812345670",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "48, Hadala Rajkot-Morbi Highway",
+      "addressLocality": "Rajkot",
+      "addressRegion": "Gujarat",
+      "postalCode": "360003",
+      "addressCountry": "IN"
+    },
+    "openingHours": "Mo-Sa 09:00-20:00, Su 10:00-18:00",
+    "priceRange": "₹₹"
+  }
+  </script>
+</head>
+<body>
+  <!-- Skip Navigation Link -->
+  <a href="#main" class="skip-link visually-hidden-focusable">Skip to main content</a>
+
+  <!-- Header Navigation -->
+  <nav id="site-nav" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top" role="navigation" aria-label="Main navigation">
+    <div class="container align-items-stretch">
+      <!-- Brand -->
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark" href="index.html">
+        <img class="logo" src="image/header/logo.png" alt="IONIX Logo" width="40" height="40" />
+        <span>IONIX</span>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <input type="checkbox" id="nav-toggle" class="d-none" aria-hidden="true" />
+      <label for="nav-toggle" class="navbar-toggler border-0 p-2 d-lg-none" aria-label="Toggle navigation menu" aria-controls="navMenu" aria-expanded="false">
+        <span class="toggler-bar"></span>
+        <span class="toggler-bar"></span>
+        <span class="toggler-bar"></span>
+      </label>
+
+      <!-- Navigation Menu -->
+      <div id="navMenu" class="navbar-collapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html" aria-current="page">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="catagories.html">Categories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="product.html">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+            <a class="btn btn-primary" href="product.html">Shop Now</a>
+          </li>
+          <!-- Cart button (shows number of items) -->
+          <li class="nav-item ms-2">
+            <a id="cartToggle" class="btn btn-outline-primary position-relative" href="cart.html" aria-label="View cart">
+              🛒
+              <span id="cartCount" class="badge bg-danger rounded-pill" style="position:absolute;top:-6px;right:-8px;font-size:0.65rem;padding:.25rem .45rem">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <div id="userMenuContainer"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="home" class="hero py-5" role="banner">
+    <div class="container py-4">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="badge bg-primary-subtle text-primary mb-3">New Season Deals</span>
+          <h1 class="display-5 fw-bold mb-3">IONIX — Your One‑Stop Shop for Phones, Laptops & Electronics</h1>
+          <p class="lead mb-4">Discover top brands, exclusive bundles, and fast delivery. Trusted by 50,000+ happy customers.</p>
+          
+          <div class="d-flex gap-3 mb-4 flex-wrap">
+            <a href="product.html" class="btn btn-light btn-lg text-dark">Shop Phones</a>
+            <a href="product.html" class="btn btn-outline-light btn-lg">Shop Laptops</a>
+          </div>
+          
+          <div class="d-flex gap-4 text-white-50 flex-wrap">
+            <div>
+              <strong class="text-white">4.8/5</strong> 
+              <span>rating</span>
+            </div>
+            <div>
+              <strong class="text-white">50k+</strong> 
+              <span>orders</span>
+            </div>
+            <div>
+              <strong class="text-white">2yr</strong> 
+              <span>warranty</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=60"
+              class="img-fluid rounded-4 shadow-lg"
+              alt="Latest smartphones and electronic gadgets display"
+              width="1200"
+              height="800"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main">
+    <!-- Categories Section -->
+    <section id="categories" class="py-5" aria-labelledby="categories-heading">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 id="categories-heading" class="section-title">Shop by Category</h2>
+          <p class="section-subtitle mx-auto">Find the perfect device for work, play, and everything in between.</p>
+        </div>
+
+        <div class="row g-4">
+          <!-- Smartphone Category -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <article class="h-100">
+              <a href="product.html" class="card category-card h-100 text-decoration-none">
+                <img 
+                  src="image/body/smartphone.webp" 
+                  class="card-img-top" 
+                  alt="Smartphones category - Android and iPhone models" 
+                  width="400" 
+                  height="300" 
+                  loading="lazy"
+                />
+                <div class="card-body">
+                  <h3 class="card-title mb-0 h5">Smartphones</h3>
+                  <p class="small text-muted mb-0">Android, iPhone & more</p>
+                </div>
+              </a>
+            </article>
+          </div>
+          
+          <!-- Laptop Category -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <article class="h-100">
+              <a href="product.html" class="card category-card h-100 text-decoration-none">
+                <img 
+                  src="image/body/laptop.jpg" 
+                  class="card-img-top" 
+                  alt="Laptops and Ultrabooks for work and gaming" 
+                  width="400" 
+                  height="300" 
+                  loading="lazy"
+                />
+                <div class="card-body">
+                  <h3 class="card-title mb-0 h5">Laptops</h3>
+                  <p class="small text-muted mb-0">Work, gaming, creator</p>
+                </div>
+              </a>
+            </article>
+          </div>
+          
+          <!-- Accessories Category -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <article class="h-100">
+              <a href="product.html" class="card category-card h-100 text-decoration-none">
+                <img 
+                  src="image/body/accessories.jpg" 
+                  class="card-img-top" 
+                  alt="Headphones and audio accessories" 
+                  width="400" 
+                  height="300" 
+                  loading="lazy"
+                />
+                <div class="card-body">
+                  <h3 class="card-title mb-0 h5">Accessories</h3>
+                  <p class="small text-muted mb-0">Audio, chargers, cases</p>
+                </div>
+              </a>
+            </article>
+          </div>
+          
+          <!-- Wearables Category -->
+          <div class="col-12 col-sm-6 col-lg-3">
+            <article class="h-100">
+              <a href="product.html" class="card category-card h-100 text-decoration-none">
+                <img 
+                  src="image/body/smartwatches.jpg" 
+                  class="card-img-top" 
+                  alt="Smartwatches and fitness trackers" 
+                  width="400" 
+                  height="300" 
+                  loading="lazy"
+                />
+                <div class="card-body">
+                  <h3 class="card-title mb-0 h5">Wearables</h3>
+                  <p class="small text-muted mb-0">Smartwatches & fitness</p>
+                </div>
+              </a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="products" class="py-5 bg-light" aria-labelledby="products-heading">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+          <div>
+            <h2 id="products-heading" class="section-title mb-0">Featured Products</h2>
+            <p class="section-subtitle mb-0">Handpicked bestsellers and latest arrivals.</p>
+          </div>
+          <a href="contact.html" class="btn btn-outline-primary">Need help choosing?</a>
+        </div>
+
+        <!-- Dynamic Featured Products Grid -->
+        <div id="featuredProductsGrid" class="row g-4" role="list" aria-label="Featured products">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="py-5" aria-labelledby="why-choose-heading">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 id="why-choose-heading" class="section-title">Why Shop with IONIX?</h2>
+          <p class="section-subtitle mx-auto">We keep it simple: quality gear, fair prices, and top-tier support.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-flex gap-3">
+              <div class="feature-icon" aria-hidden="true">🚚</div>
+              <div>
+                <h3 class="mb-1 h6">Fast, Free Shipping</h3>
+                <p class="mb-0 text-muted">Free over ₹999 with same‑day dispatch.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-flex gap-3">
+              <div class="feature-icon" aria-hidden="true">🔒</div>
+              <div>
+                <h3 class="mb-1 h6">Secure Checkout</h3>
+                <p class="mb-0 text-muted">Encrypted payments and buyer protection.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-flex gap-3">
+              <div class="feature-icon" aria-hidden="true">🛡️</div>
+              <div>
+                <h3 class="mb-1 h6">2‑Year Warranty</h3>
+                <p class="mb-0 text-muted">Extended coverage on most devices.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-flex gap-3">
+              <div class="feature-icon" aria-hidden="true">💬</div>
+              <div>
+                <h3 class="mb-1 h6">24/7 Expert Support</h3>
+                <p class="mb-0 text-muted">Real humans, real help—anytime.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 bg-light" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6">
+            <img 
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=60" 
+              class="img-fluid rounded-4 shadow-sm" 
+              alt="IONIX team working on customer service" 
+              width="1200" 
+              height="800" 
+              loading="lazy"
+            />
+          </div>
+          <div class="col-lg-6">
+            <h2 id="about-heading" class="section-title">About IONIX</h2>
+            <p class="text-muted">We're a team of tech enthusiasts on a mission to make high‑quality electronics accessible and reliable. From workhorse laptops to flagship phones, we test and curate every product we sell.</p>
+            <ul class="text-muted">
+              <li>Authorized retailer for top global brands</li>
+              <li>Certified repairs and after‑sales service</li>
+              <li>Eco‑friendly packaging and recycling program</li>
+            </ul>
+            <a href="contact.html" class="btn btn-primary">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <h2 id="contact-heading" class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Questions, bulk orders, or warranty help? We're here.</p>
+
+            <form action="messager.html" method="post" class="row g-3">
+              <div class="col-md-6">
+                <label for="contact-name" class="form-label">Name <span class="text-danger">*</span></label>
+                <input 
+                  id="contact-name" 
+                  name="name" 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Your name" 
+                  required 
+                  aria-required="true"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="contact-email" class="form-label">Email <span class="text-danger">*</span></label>
+                <input 
+                  id="contact-email" 
+                  name="email" 
+                  type="email" 
+                  class="form-control" 
+                  placeholder="you@example.com" 
+                  required 
+                  aria-required="true"
+                />
+              </div>
+              <div class="col-12">
+                <label for="contact-subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                <input 
+                  id="contact-subject" 
+                  name="subject" 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="How can we help?" 
+                  required 
+                  aria-required="true"
+                />
+              </div>
+              <div class="col-12">
+                <label for="contact-message" class="form-label">Message <span class="text-danger">*</span></label>
+                <textarea 
+                  id="contact-message" 
+                  name="message" 
+                  class="form-control" 
+                  rows="5" 
+                  placeholder="Write your message..." 
+                  required 
+                  aria-required="true"
+                ></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary btn-lg" type="submit">Send Message</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-lg-6">
+            <aside class="h-100 p-4 p-lg-5 bg-light rounded-4">
+              <h3 class="fw-semibold mb-3 h5">Store Information</h3>
+              
+              <address class="mb-4">
+                <strong>Address:</strong><br>
+                48, Hadala Rajkot-Morbi Highway<br>
+                Rajkot City, Gujarat 360003, India
+              </address>
+              
+              <p class="mb-2">
+                <strong>Phone:</strong> 
+                <a href="tel:+919812345670" class="text-decoration-none">+91 98123‑45670</a>
+              </p>
+              <p class="mb-4">
+                <strong>Email:</strong> 
+                <a href="mailto:support@ionix.com" class="text-decoration-none">support@ionix.com</a>
+              </p>
+
+              <h4 class="fw-semibold h6">Business Hours</h4>
+              <p class="mb-4">
+                Monday–Saturday: 9:00 AM – 8:00 PM<br>
+                Sunday: 10:00 AM – 6:00 PM
+              </p>
+
+              <h4 class="fw-semibold h6">Newsletter</h4>
+              <form class="d-flex gap-2" aria-label="Newsletter subscription">
+                <label for="newsletter-email" class="visually-hidden">Email address</label>
+                <input 
+                  id="newsletter-email" 
+                  type="email" 
+                  class="form-control" 
+                  placeholder="Your email" 
+                  required 
+                  aria-required="true"
+                />
+                <button class="btn btn-outline-primary" type="submit">Subscribe</button>
+              </form>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer pt-5" role="contentinfo">
+    <div class="container pb-4">
+      <div class="row g-4">
+        <!-- Company Info -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <h2 class="text-white h5">IONIX</h2>
+          <p class="mb-3">Phones, laptops, and accessories you'll love—backed by fast delivery and real support.</p>
+          <div class="d-flex gap-3">
+            <a href="https://twitter.com/ionix" aria-label="Follow us on Twitter" rel="noopener noreferrer">🐦</a>
+            <a href="https://instagram.com/ionix" aria-label="Follow us on Instagram" rel="noopener noreferrer">📸</a>
+            <a href="https://youtube.com/ionix" aria-label="Subscribe on YouTube" rel="noopener noreferrer">▶️</a>
+            <a href="https://facebook.com/ionix" aria-label="Like us on Facebook" rel="noopener noreferrer">📘</a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-6 col-lg-2">
+          <h3 class="text-white h6">Shop</h3>
+          <nav aria-label="Shop navigation">
+            <ul class="list-unstyled">
+              <li><a href="product.html">Smartphones</a></li>
+              <li><a href="product.html">Laptops</a></li>
+              <li><a href="product.html">Accessories</a></li>
+              <li><a href="product.html">Wearables</a></li>
+            </ul>
+          </nav>
+        </div>
+        
+        <div class="col-6 col-lg-2">
+          <h3 class="text-white h6">Company</h3>
+          <nav aria-label="Company navigation">
+            <ul class="list-unstyled">
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Careers</a></li>
+              <li><a href="contact.html">Press</a></li>
+              <li><a href="contact.html">Partners</a></li>
+            </ul>
+          </nav>
+        </div>
+        
+        <div class="col-12 col-lg-4">
+          <h3 class="text-white h6">Support</h3>
+          <nav aria-label="Support navigation">
+            <ul class="list-unstyled mb-3">
+              <li><a href="contact.html">Help Center</a></li>
+              <li><a href="contact.html">Shipping & Returns</a></li>
+              <li><a href="contact.html">Warranty</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </nav>
+          <p class="small text-secondary mb-0">
+            © 2025 IONIX Electronics Pvt. Ltd. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#home" class="back-to-top" aria-label="Back to top">
+    <span aria-hidden="true">↑</span>
+  </a>
+
+  <!-- User Widget Script - to be included on each page -->
+  <script>
+/* filepath: c:\Users\LENOVO\OneDrive\Documents\3rd Sem\My Website\index.html */
+/* small user widget renderer used across pages */
+(function(){
+  const USER_KEY = 'ionix_user_v1';
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function firstName(n){ return (n||'').split(' ')[0] || n || 'Account'; }
+  function renderUser(){
+    const c = document.getElementById('userMenuContainer');
+    if(!c) return;
+    const u = JSON.parse(localStorage.getItem(USER_KEY)||'null');
+    if(u){
+      c.innerHTML = `
+        <div id="userWidget" class="position-relative d-inline-block">
+          <button id="userBtn" class="btn btn-outline-primary">${escapeHtml(firstName(u.name))}</button>
+          <div id="userDropdown" style="display:none;position:absolute;right:0;top:38px;min-width:180px;z-index:1000;">
+            <!-- dropdown content -->
+          </div>
+        </div>
+      `;
+    } else {
+      c.innerHTML = '<a class="nav-link" href="login.html">Login</a>';
+    }

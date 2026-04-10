@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flagship Smartphone X — IONIX</title>
+
+  <!-- Bootstrap 5 CSS only -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #site-nav .navbar-nav { display:flex; gap:0.75rem; align-items:center; }
+    #site-nav .nav-item .btn.btn-primary { margin-right: 0.4rem; }
+    #userMenuContainer { margin-left: 0.4rem; }
+    .btn { border-radius:10px; transition: transform .12s, box-shadow .12s; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+    .btn:hover, .btn:focus { transform:translateY(-3px); box-shadow:0 10px 24px rgba(13,110,253,0.12); }
+    .btn-primary { background-image: linear-gradient(90deg, var(--bs-primary,#0d6efd), #4b8af7); border: none; }
+    .btn-outline-primary { border-width:1px; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Navbar (CSS-only collapse) -->
+  <div id="nav-placeholder"></div>
+  <script>
+  (async function insertNavWithTransitions(){
+    try{
+      const res = await fetch('/index.html');
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html,'text/html');
+      const nav = doc.getElementById('site-nav');
+      if(!nav) return;
+      const clone = nav.cloneNode(true);
+      const placeholder = document.getElementById('nav-placeholder');
+      placeholder.replaceWith(clone);
+
+      if(window.renderUser) setTimeout(()=>{ try{ window.renderUser(); }catch(e){} }, 60);
+      else { const c = clone.querySelector('#userMenuContainer'); if(c) c.innerHTML = '<a class="nav-link" href="login.html">Login</a>'; }
+
+      document.body.style.transition = document.body.style.transition || 'opacity .35s ease';
+      document.body.style.opacity = 0;
+      requestAnimationFrame(()=> document.body.style.opacity = 1);
+
+      function setActiveNav(root){
+        const links = Array.from(root.querySelectorAll('a'));
+        function norm(p){ return (p||'').replace(/\/+$/,'')||'/'; }
+        const cur = norm(location.pathname);
+        links.forEach(a=>{
+          a.classList.remove('active');
+          try{
+            const href = a.getAttribute('href')||'';
+            if(href.startsWith('#')) return;
+            const u = new URL(href, location.href);
+            const p = norm(u.pathname);
+            if(p===cur || (cur==='/' && p==='/index.html')) a.classList.add('active');
+          }catch(e){}
+        });
+      }
+      setActiveNav(clone);
+
+      function isExternal(href){ try{ const u=new URL(href, location.href); return u.origin !== location.origin; }catch(e){ return false; } }
+      clone.querySelectorAll('a').forEach(a=>{
+        const href = a.getAttribute('href')||'';
+        if(a.target === '_blank' || href.startsWith('mailto:') || href.startsWith('tel:') || isExternal(href)) return;
+        a.addEventListener('click', (ev)=>{
+          if(href.startsWith('#')){ ev.preventDefault(); const id=href.slice(1); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); return; }
+          ev.preventDefault();
+          document.body.style.opacity = 0;
+          setTimeout(()=> window.location.href = href, 320);
+        });
+      });
+    }catch(e){ console.error('Failed to load site nav', e); }
+  })();
+  </script>
+
+  <!-- Header -->
+  <header id="home" class="hero py-4">
+    <div class="container">
+      <nav aria-label="breadcrumb" class="mb-2">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="link-light text-decoration-none" href="index.html#home">Home</a></li>
+          <li class="breadcrumb-item"><a class="link-light text-decoration-none" href="product.html#products">Products</a></li>
+          <li class="breadcrumb-item active text-white-50" aria-current="page">Flagship Smartphone X</li>
+        </ol>
+      </nav>
+      <h1 class="display-6 fw-bold">Flagship Smartphone X</h1>
+      <p class="text-white-50 mb-0">Powerful performance, pro camera, all‑day battery.</p>
+    </div>
+  </header>
+
+  <main id="main" class="py-5 bg-light">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Gallery (CSS-only radio switch) -->
+        <div class="col-lg-6">
+          <div class="pd-gallery card border-0 shadow-sm p-3">
+            <!-- Radios -->
+            <input class="pd-radio" type="radio" name="g" id="g1" checked>
+            <input class="pd-radio" type="radio" name="g" id="g2">
+            <input class="pd-radio" type="radio" name="g" id="g3">
+
+            <!-- Stage -->
+            <div class="pd-stage rounded-3 overflow-hidden">
+              <img class="pd-img pd-img--1" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=70" alt="Flagship Smartphone X front view" loading="lazy">
+              <img class="pd-img pd-img--2" src="https://images.unsplash.com/photo-1491933382434-500287f9b54b?auto=format&fit=crop&w=1600&q=70" alt="Flagship Smartphone X back view" loading="lazy">
+              <img class="pd-img pd-img--3" src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=1600&q=70" alt="Flagship Smartphone X lifestyle" loading="lazy">
+            </div>
+
+            <!-- Thumbs -->
+            <div class="pd-thumbs mt-3 d-flex gap-2">
+              <label class="pd-thumb" for="g1">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=60" alt="Front thumbnail">
+              </label>
+              <label class="pd-thumb" for="g2">
+                <img src="https://images.unsplash.com/photo-1491933382434-500287f9b54b?auto=format&fit=crop&w=400&q=60" alt="Back thumbnail">
+              </label>
+              <label class="pd-thumb" for="g3">
+                <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=400&q=60" alt="Lifestyle thumbnail">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span id="pd-badge" class="badge bg-danger">Sale</span>
+                <div id="pd-rating" class="rating">★★★★★ <span class="text-muted">(124)</span></div>
+              </div>
+              <h2 id="pd-title" class="h3 fw-bold mb-1">Flagship Smartphone X</h2>
+              <p id="pd-sub" class="mb-3 text-muted">128GB • 5G • 6.7” OLED</p>
+              <div class="mb-3 fs-4">
+                <span id="pd-price" class="price">₹79,999</span>
+                <span id="pd-oldprice" class="old-price fs-6">₹89,999</span>
+              </div>
+
+              <!-- Colors -->
+              <div class="mb-3">
+                <div class="fw-semibold mb-2">Color</div>
+                <div class="swatches d-flex flex-wrap gap-2">
+                  <input type="radio" class="visually-hidden" name="color" id="colorMidnight" checked>
+                  <label class="swatch" for="colorMidnight" style="--sw:#111">Midnight</label>
+
+                  <input type="radio" class="visually-hidden" name="color" id="colorSilver">
+                  <label class="swatch" for="colorSilver" style="--sw:#d4d4d8">Silver</label>
+
+                  <input type="radio" class="visually-hidden" name="color" id="colorBlue">
+                  <label class="swatch" for="colorBlue" style="--sw:#3b82f6">Blue</label>
+                </div>
+              </div>
+
+              <!-- Storage -->
+              <div class="mb-4">
+                <div class="fw-semibold mb-2">Storage</div>
+                <div class="options d-flex flex-wrap gap-2">
+                  <input type="radio" class="visually-hidden" name="storage" id="s128" checked>
+                  <label for="s128" class="chip">128 GB</label>
+
+                  <input type="radio" class="visually-hidden" name="storage" id="s256">
+                  <label for="s256" class="chip">256 GB</label>
+
+                  <input type="radio" class="visually-hidden" name="storage" id="s512">
+                  <label for="s512" class="chip">512 GB</label>
+                </div>
+              </div>
+
+              <div class="d-grid gap-2 mb-3">
+                <button id="pd-add-to-cart" class="btn btn-primary btn-lg">Add to Cart</button>
+                <a id="pd-ask" href="index.html#contact" class="btn btn-outline-secondary">Ask a question</a>
+              </div>
+
+              <ul id="pd-features" class="text-muted small mb-0 list-unstyled">
+                <li>• Free shipping over ₹999</li>
+                <li>• 2‑year warranty</li>
+                <li>• 7‑day easy returns</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Accordions (details/summary) -->
+          <div class="mt-4">
+            <details class="pd-acc mb-2" open>
+              <summary class="fw-semibold">Specifications</summary>
+              <div class="pt-2 text-muted">
+                <ul class="mb-0">
+                  <li>Chip: Octa‑core 3.0GHz</li>
+                  <li>Display: 6.7” 120Hz OLED</li>
+                  <li>Camera: 50MP + 12MP + 10MP</li>
+                  <li>Battery: 5000mAh, 65W fast charge</li>
+                  <li>Connectivity: 5G, Wi‑Fi 6, BT 5.3</li>
+                </ul>
+              </div>
+            </details>
+            <details class="pd-acc mb-2">
+              <summary class="fw-semibold">What’s in the box</summary>
+              <div class="pt-2 text-muted">
+                Handset, USB‑C cable, SIM tool, Quick start guide.
+              </div>
+            </details>
+            <details class="pd-acc">
+              <summary class="fw-semibold">Shipping & returns</summary>
+              <div class="pt-2 text-muted">
+                Free shipping over ₹999. Returns accepted within 7 days in original condition.
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related products -->
+      <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+          <h3 class="h4 mb-0">You may also like</h3>
+          <a class="text-decoration-none" href="product.html#products">View all →</a>
+        </div>
+        <div class="row g-4">
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+              <img src="image/body/wireless_earbuds.jpg" class="card-img-top" alt="Wireless Earbuds" loading="lazy">
+              <div class="card-body d-flex flex-column">
+                <h6 class="fw-semibold">Wireless Earbuds</h6>
+                <div class="rating mb-2">★★★★★ <span class="text-muted">(410)</span></div>
+                <div class="mb-3"><span class="price">₹12,999</span></div>
+                <div class="mt-auto d-grid gap-2">
+                  <a href="product-detail.html" class="btn btn-primary">Add to Cart</a>
+                  <a href="product-detail.html" class="btn btn-outline-secondary">View details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+              <img src="image/body/portable_charger.jpg" class="card-img-top" alt="Portable Fast Charger" loading="lazy">
+              <div class="card-body d-flex flex-column">
+                <h6 class="fw-semibold">Portable Fast Charger</h6>
+                <div class="rating mb-2">★★★★★ <span class="text-muted">(211)</span></div>
+                <div class="mb-3"><span class="price">₹3,999</span></div>
+                <div class="mt-auto d-grid gap-2">
+                  <a href="product-detail.html" class="btn btn-primary">Add to Cart</a>
+                  <a href="product-detail.html" class="btn btn-outline-secondary">View details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+              <img src="image/body/watch_7series.webp" class="card-img-top" alt="Smartwatch Series 7" loading="lazy">
+              <div class="card-body d-flex flex-column">
+                <h6 class="fw-semibold">Smartwatch Series 7</h6>
+                <div class="rating mb-2">★★★★☆ <span class="text-muted">(152)</span></div>
+                <div class="mb-3"><span class="price">₹24,999</span></div>
+                <div class="mt-auto d-grid gap-2">
+                  <a href="product-detail.html" class="btn btn-primary">Add to Cart</a>
+                  <a href="product-detail.html" class="btn btn-outline-secondary">View details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="card product-card h-100">
+              <img src="image/body/headphones.jpg" class="card-img-top" alt="Noise‑Cancel Headphones" loading="lazy">
+              <div class="card-body d-flex flex-column">
+                <h6 class="fw-semibold">Noise‑Cancel Headphones</h6>
+                <div class="rating mb-2">★★★★★ <span class="text-muted">(307)</span></div>
+                <div class="mb-3"><span class="price">₹19,999</span></div>
+                <div class="mt-auto d-grid gap-2">
+                  <a href="product-detail.html" class="btn btn-primary">Add to Cart</a>
+                  <a href="product-detail.html" class="btn btn-outline-secondary">View details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer pt-5">
+    <div class="container pb-4">
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4">
+          <h5 class="text-white">IONIX</h5>
+          <p class="mb-3">Phones, laptops, and accessories you’ll love—backed by fast delivery and real support.</p>
+          <div class="d-flex gap-3">
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="YouTube">▶️</a>
+            <a href="#" aria-label="Facebook">📘</a>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6 class="text-white">Shop</h6>
+          <ul class="list-unstyled">
+            <li><a href="product.html#products">Smartphones</a></li>
+            <li><a href="product.html#products">Laptops</a></li>
+            <li><a href="product.html#products">Accessories</a></li>
+            <li><a href="product.html#products">Wearables</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <h6 class="text-white">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Careers</a></li>
+            <li><a href="index.html#contact">Press</a></li>
+            <li><a href="index.html#contact">Partners</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-4">
+          <h6 class="text-white">Support</h6>
+          <ul class="list-unstyled mb-3">
+            <li><a href="index.html#contact">Help center</a></li>
+            <li><a href="index.html#contact">Shipping & returns</a></li>
+            <li><a href="index.html#contact">Warranty</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+          <small class="text-secondary">© 2025 IONIX. All rights reserved.</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top (CSS only) -->
+  <a href="#home" class="back-to-top" aria-label="Back to top">↑</a>
+
+  <!-- No JS required -->
+  <!-- Toast container (reused) -->
+  <div id="pdToast" aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index:1050; pointer-events:none;"></div>
+
+  <script>
+  // Product-detail JS: try to load product from server, fallback to built-in catalog
+  (async function(){
+    const CART_KEY = 'ionix_cart_v1';
+    function $(sel){ return document.querySelector(sel); }
+    function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+    function getIdFromQuery(){ return new URLSearchParams(window.location.search).get('id'); }
+    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Try fetch product from API
+    const id = getIdFromQuery();
+    let product = null;
+    if(id){
+      try{
+        const res = await fetch('/api/products/' + encodeURIComponent(id));
+        if(res.ok) product = await res.json();
+      }catch(e){ product = null; }
+    }
+
+    // If server didn't return, try embedded catalog (existing fallback)
+    if(!product){
+      // small embedded lookup extracted from previous catalog (keep minimal)
+      const fallbackCatalog = [
+        { id:'flagship-smartphone-x', title:'Flagship Smartphone X', price:79999, oldPrice:89999, rating:5, reviews:124, images:['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=70'], subtitle:'128GB • 5G • 6.7” OLED', specs:['Octa‑core 3.0GHz','6.7” 120Hz OLED','50MP + 12MP + 10MP','5000mAh, 65W fast charge'] },
+        // (you can keep other items here as fallback if desired)
+      ];
+      product = fallbackCatalog.find(p=>p.id===id) || fallbackCatalog[0];
+    } else {
+      // unify shape returned by server into expected fields
+      product = {
+        id: product._id || product.slug || id,
+        title: product.title || product.name || 'Product',
+        price: product.price || 0,
+        oldPrice: product.oldPrice || product.old_price || 0,
+        rating: product.rating || 4,
+        reviews: product.reviews || 0,
+        images: product.images && product.images.length ? product.images : (product.image ? [product.image] : []),
+        subtitle: product.subtitle || product.category || '',
+        specs: product.specs || []
+      };
+    }
+
+    // populate gallery + meta (simple versions of earlier functions)
+    function populateGallery(images){
+      const stage = document.querySelector('.pd-stage');
+      const thumbs = document.querySelector('.pd-thumbs');
+      if(!stage || !thumbs) return;
+      stage.innerHTML = '';
+      thumbs.innerHTML = '';
+      (images.length ? images : ['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=70']).slice(0,6).forEach((src,i)=>{
+        const img = document.createElement('img'); img.className = 'pd-img pd-img--' + (i+1); img.src = src; img.alt = product.title; img.loading='lazy'; stage.appendChild(img);
+        const lbl = document.createElement('label'); lbl.className='pd-thumb'; lbl.innerHTML=`<img src="${src}" alt="thumb">`; thumbs.appendChild(lbl);
+      });
+      // radios: ensure at least one radio exists for CSS switching
+      $all('.pd-radio').forEach(r=>r.remove());
+      const firstRadio = document.createElement('input'); firstRadio.type='radio'; firstRadio.name='g'; firstRadio.className='pd-radio'; firstRadio.id='g1'; firstRadio.checked=true; stage.parentNode.insertBefore(firstRadio, stage);
+    }
+
+    function populateMeta(p){
+      $('#pd-title').textContent = p.title;
+      $('#pd-sub').textContent = p.subtitle || '';
+      $('#pd-price').textContent = p.price ? '₹' + p.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '';
+      $('#pd-oldprice').textContent = p.oldPrice ? '₹' + p.oldPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '';
+      $('#pd-rating').innerHTML = '★'.repeat(p.rating||4) + ' <span class="text-muted">(' + (p.reviews||0) + ')</span>';
+      $('#pd-badge').style.display = p.oldPrice ? '' : 'none';
+      // specs
+      const details = document.querySelector('details.pd-acc');
+      if(details){
+        const content = details.querySelector('.pt-2');
+        if(content){
+          content.innerHTML = '';
+          if(p.specs && p.specs.length){
+            const ul = document.createElement('ul'); ul.className='mb-0 text-muted';
+            p.specs.forEach(s=>{ const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+            content.appendChild(ul);
+          } else {
+            content.textContent = '';
+          }
+        }
+      }
+    }
+
+    // cart logic
+    function loadCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }catch(e){ return []; } }
+    function saveCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); }
+    function addToCart(prod){
+      const cart = loadCart();
+      const ex = cart.find(i=>i.id===prod.id);
+      if(ex) ex.qty=(ex.qty||1)+1; else cart.push({ id:prod.id, title:prod.title, price:prod.price, img: (prod.images && prod.images[0])||'', qty:1 });
+      saveCart(cart);
+      // update site-wide cart counter if available
+      try{ if(window.updateCartCount) window.updateCartCount(); }catch(e){}
+      alert(prod.title + ' added to cart');
+    }
+
+    // wire add to cart button
+    document.getElementById('pd-add-to-cart')?.addEventListener('click', ()=> addToCart(product));
+    // populate UI
+    populateGallery(product.images || []);
+    populateMeta(product);
+    document.title = (product.title || 'Product') + ' — IONIX';
+  })();
+  </script>
+
+  <script>
+/* filepath: c:\Users\LENOVO\OneDrive\Documents\3rd Sem\My Website\PRODUCT-DETAIL.HTML */
+(function(){
+  const USER_KEY = 'ionix_user_v1';
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function firstName(n){ return (n||'').split(' ')[0] || n || 'Account'; }
+  function renderUser(){
+    const c = document.getElementById('userMenuContainer');
+    if(!c) return;
+    const u = JSON.parse(localStorage.getItem(USER_KEY)||'null');
+    if(u){
+      c.innerHTML = `<div id="userWidget" class="position-relative d-inline-block">
+        <button id="userBtn" class="btn btn-outline-primary">${escapeHtml(firstName(u.name))}</button>
+        <div id="userDropdown" style="display:none;position:absolute;right:0;top:38px;min-width:180px;z-index:2000;" class="card p-2">
+          <div class="small text-muted">Signed in as <strong>${escapeHtml(u.name)}</strong></div>
+          <hr class="my-2">
+          <a class="d-block py-1" href="product.html">My Orders</a>
+          <a class="d-block py-1" href="contact.html">Support</a>
+          <button id="logoutBtn" class="btn btn-link p-0 mt-2">Logout</button>
+        </div></div>`;
+      const btn=document.getElementById('userBtn'), dd=document.getElementById('userDropdown');
+      btn.addEventListener('click', ()=> dd.style.display = dd.style.display === 'none' ? 'block' : 'none');
+      document.addEventListener('click', (e)=> { if(!document.getElementById('userWidget').contains(e.target)) dd.style.display='none'; });
+      document.getElementById('logoutBtn')?.addEventListener('click', ()=>{ localStorage.removeItem(USER_KEY); renderUser(); });
+    } else {
+      c.innerHTML = `<a class="nav-link" href="login.html">Login</a>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', renderUser);
+  window.renderUser = renderUser;
+})();
+</script>
+</body>
+</html>
